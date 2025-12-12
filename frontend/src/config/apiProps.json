@@ -1,0 +1,128 @@
+{
+    "pageTitle": "Налаштування Kong Service & Routes",
+    "elements": [
+      {
+        "id": "service-config-section",
+        "type": "Section",
+        "props": {
+          "title": "Api configuration",
+          "name": "service" 
+        },
+        "children": [
+          {
+            "id": "input-service-name",
+            "type": "Input",
+            "props": {
+              "label": "Api Name:",
+              "name": "name", 
+              "required": true,
+              "dataType": "text",
+              "helpText": "Unique api name"
+            }
+          },
+          {
+            "id": "input-service-url",
+            "type": "Input",
+            "props": {
+              "label": "Upstream URL:",
+              "name": "url",
+              "required": true,
+              "dataType": "url",
+              "helpText": "Full URL where Kong will proxy requests (e.g., 'http://user-api:8080')"
+            }
+          },
+          {
+            "id": "input-service-port",
+            "type": "Input",
+            "props": {
+              "label": "Upstream port:",
+              "name": "port",
+              "required": true,
+              "dataType": "number",
+              "helpText": "Port number where Kong will proxy requests (e.g., 8080)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "routes-config-section",
+        "type": "Section",
+        "props": {
+          "title": "Routes Configuration",
+          "name": "routes"
+        },
+        "isRepeatable": true, 
+        "children": [
+          {
+            "id": "input-route-name",
+            "type": "Input",
+            "props": {
+              "label": "Route Name:",
+              "name": "name", 
+              "required": true,
+              "dataType": "text",
+              "helpText": "Unique name for the route (e.g., 'user-create-route')"
+            }
+          },
+          {
+            "id": "input-route-paths",
+            "type": "Input",
+            "props": {
+              "label": "Paths:",
+              "name": "paths", 
+              "required": true,
+              "dataType": "text",
+              "helpText": "Comma-separated paths for routing (e.g., '/users, /api/v1/users')"
+            }
+          },
+          {
+            "id": "select-route-methods",
+            "type": "Select",
+            "props": {
+              "label": "Methods:",
+              "name": "methods",
+              "isMulti": true,
+              "options": [
+                {"label": "GET", "value": "GET"}, 
+                {"label": "POST", "value": "POST"}, 
+                {"label": "PUT", "value": "PUT"}, 
+                {"label": "DELETE", "value": "DELETE"}
+              ],
+              "defaultValue": ["GET"]
+            }
+          }
+        ]
+      },
+      {
+          "id": "plugins-config-section",
+          "type": "Section",
+          "props": {
+            "title": "3. Plugins (Rate Limiting)",
+            "name": "plugins"
+          },
+          "children": [
+              {
+                  "id": "checkbox-rate-limiting",
+                  "type": "Checkbox",
+                  "props": {
+                      "label": "Enable Rate Limiting?",
+                      "name": "enable_rate_limit"
+                  }
+              },
+              {
+                  "id": "input-rate-limit-minutes",
+                  "type": "Input",
+                  "props": {
+                      "label": "Requests per minute:",
+                      "name": "minute",
+                      "dataType": "number",
+                      "placeholder": "50"
+                  },
+                  "dependencies": {
+                      "showIf": {"field": "enable_rate_limit", "value": true}
+                  }
+              }
+          ]
+      }
+    ]
+  }
