@@ -1,6 +1,6 @@
 # Alpaka - Configuration Change Request Management System
 
-A full-stack application for managing API Gateway configuration change requests with a two-tier approval workflow, team-based organization, and comprehensive audit trails.
+A universal full-stack application for managing configuration change requests in large microservice applications. Designed to handle change requests with any predefined structure, providing a two-tier approval workflow, team-based organization, and comprehensive audit trails.
 
 ## 📋 Table of Contents
 
@@ -20,7 +20,9 @@ A full-stack application for managing API Gateway configuration change requests 
 
 ## 🎯 Overview
 
-Alpaka is a Configuration Change Request (CR) management system designed for managing API Gateway configurations in a microservice environment. It provides:
+Alpaka is a Configuration Change Request (CR) management system designed to be **universal for any large microservice application**. While it's well-suited for managing API Gateway configurations, the system is flexible enough to handle change requests with **any predefined structure** for various microservice components and configurations.
+
+The system provides:
 
 - **Controlled Automation**: Safe, audited configuration changes
 - **Accountability**: Complete audit trail for all changes
@@ -34,7 +36,9 @@ Alpaka is a Configuration Change Request (CR) management system designed for man
 
 1. **Change Request Management**
    - Create, view, update, and track configuration change requests
+   - **Flexible CR Structure**: Change requests can have any predefined structure, making the system universal for any microservice component (API Gateway, service configurations, infrastructure changes, etc.)
    - Dynamic form rendering for CR creation (loaded from JSON configuration)
+   - The CR payload structure is completely customizable via the JSON form configuration
    - Full CR lifecycle management from draft to completion
 
 2. **Two-Tier Approval Process**
@@ -259,6 +263,10 @@ This will:
 
 ## ⚙️ Configuration
 
+### Authentication Options
+
+**Note**: Before configuring authentication, consider if your organization has SSO (Single Sign-On) available. If SSO is available, it's recommended to integrate it instead of using the built-in JWT authentication system. See the [Security](#-security) section for more details.
+
 ### Backend Environment Variables
 
 Create a `.env` file in the `backend/` directory or set environment variables:
@@ -293,16 +301,19 @@ REACT_APP_API_URL=http://localhost:8080/api/v1
 
 ### Dynamic Form Configuration
 
-**Important**: The UI for creating Change Requests is dynamically loaded from a JSON configuration file.
+**Important**: The UI for creating Change Requests is dynamically loaded from a JSON configuration file. This design makes Alpaka **universal for any microservice application** - you can define any CR structure by simply modifying the JSON configuration, without changing the application code.
 
 **File Location**: `frontend/src/config/apiProps.json`
 
 This JSON file defines:
-- Form sections and structure
+- Form sections and structure (customizable for any use case)
 - Field types (Input, Select, Checkbox)
 - Field labels, validation rules, and help text
-- Repeatable sections (e.g., routes)
+- Repeatable sections (e.g., routes, endpoints, services)
 - Conditional field visibility
+- **Any predefined structure**: Whether managing API Gateway configs, service configurations, infrastructure changes, or any other microservice component
+
+The change request payload structure is stored as JSON in the database, allowing complete flexibility in what data is captured and tracked.
 
 **Example Structure:**
 ```json
@@ -713,6 +724,16 @@ Example:
 ## 🔒 Security
 
 ### Authentication
+
+**⚠️ SSO Recommendation**: If your company has a Single Sign-On (SSO) solution (e.g., SAML, OAuth2, OIDC), it is **strongly recommended** to integrate it instead of using the built-in authentication system. This provides:
+- Centralized user management
+- Enhanced security through your company's identity provider
+- Better compliance with organizational policies
+- Reduced maintenance overhead
+
+The current authentication system (JWT-based) is provided for development and environments without SSO, but should be replaced with SSO integration in production deployments.
+
+**Current Authentication Implementation:**
 - JWT tokens for stateless authentication
 - Tokens stored in localStorage (consider httpOnly cookies for production)
 - Password hashing with bcrypt
@@ -731,8 +752,9 @@ Example:
 - CORS configured for frontend origin
 
 ### Best Practices
-- Change `JWT_SECRET` in production
-- Use strong passwords
+- **Use SSO if available**: Integrate company SSO instead of built-in authentication for production deployments
+- Change `JWT_SECRET` in production (if using built-in auth)
+- Use strong passwords (if using built-in auth)
 - Enable HTTPS in production
 - Regularly review audit logs
 - Keep dependencies updated
@@ -759,18 +781,6 @@ COMPLETED ────────→ CANCELED
 
 **Note:** A CR must be APPROVED before execution can begin (IN_PROGRESS).
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## 📄 License
-
-This project is part of the Alpaka system.
-
 ## 🆘 Troubleshooting
 
 ### Database Connection Issues
@@ -796,11 +806,6 @@ This project is part of the Alpaka system.
 - Verify JWT_SECRET is set correctly
 - Check token expiration
 
-## 📞 Support
-
-For issues, questions, or contributions, please refer to the project repository or contact the development team.
-
----
 
 **Alpaka** - Configuration Change Request Management System  
 Built with Go and React
